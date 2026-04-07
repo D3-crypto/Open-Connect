@@ -1,0 +1,12 @@
+{
+  "ecosystem": "schema_v1",
+  "roster": {
+    "device_id": "public_key_string",
+    "permissions": {
+      "clipboard_sync": true,
+      "file_transfer": true,
+      "audio_handoff": false,
+      "can_approve_devices": true
+    }
+  }
+}
