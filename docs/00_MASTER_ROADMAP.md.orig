@@ -1,0 +1,54 @@
+# OpenConnect - Project Architecture & Roadmap
+
+## The Vision
+A fully open-source, privacy-first, zero-knowledge ecosystem bridging Windows, Linux, and Android. It replicates Apple's "Continuity" (Clipboard sync, notification handoff, file access, and universal control) using local Wi-Fi or a custom WireGuard mesh.
+
+## Tech Stack (The "Iceberg" Model)
+1. **The Brain (Rust):** The ultra-low-latency core engine. Handles Curve25519 cryptography, WebSockets, and mDNS discovery. Runs as a background daemon (`systemd` on Linux).
+2. **The Muscle (Kotlin/Win32/Wayland):** OS-specific hooks. Captures clipboards, hooks into DBus, intercepts notifications, and controls the WireGuard `VpnService` via Android `ForegroundService`.
+3. **The Face (Flutter):** A unified, cross-platform UI. Used solely for onboarding, device pairing (QR codes), subscription management, and the visual "Device Layout Radar Map".
+4. **The VPS Control Plane (Django):** Manages Razorpay premium subscriptions, dynamically provisions WireGuard IP addresses, and uses PostgreSQL `LISTEN/NOTIFY` to trigger cross-service events.
+5. **The VPS Relay (Rust):** A high-speed WebSocket router that blindly forwards E2EE packets between devices on different networks, subscribing to PostgreSQL events to drop expired connections instantly.
+
+## Orchestrated External Tools
+We do not reinvent the wheel. The engines act as a "Puppet Master" for:
+- **WireGuard:** For the global mesh tunnel.
+- **Syncthing (Headless):** For high-speed "Drop Zone" file transfers.
+
+## Roadmap & Milestones
+
+### Phase 1: Cloud & Core Server Logic (Completed)
+- [x] Architecture & Security Threat Model designed.
+- [x] Django API scaffolded (WireGuard Provisioning & Razorpay Webhooks).
+- [x] PostgreSQL Pub/Sub implemented to bridge Python and Rust.
+- [x] Rust WebSocket Relay built (Zero-Knowledge JSON packet routing over VPS).
+
+### Phase 2: Desktop Engine & Local Sync (Completed)
+- [x] Native Rust Desktop Daemon built (`/mnt/ezio/OpenConnect/daemon_rust`).
+- [x] Implemented local `mDNS` broadcasting/discovery in Rust.
+- [x] Implemented `libsodium` Curve25519 End-to-End Encryption engine.
+- [x] Built the `tokio-tungstenite` Local WebSocket Mesh Server & Client.
+- [x] Connected the Rust Engine to the Wayland/DBus `GSConnect` portal to silently read/write clipboards without flashing docks.
+
+### Phase 3: Android Mobile Engine (Completed)
+- [x] Android `SyncService` (Foreground Service) built to bypass Doze mode battery restrictions.
+- [x] Android `NsdManager` implemented to silently discover the Desktop Rust Daemon via Wi-Fi.
+- [x] Android Kotlin `OkHttp` WebSocket Client implemented.
+- [x] Android Kotlin `Libsodium JNI` (CryptoEngine) and `ClipboardManager` (ClipboardBridge) integrated for seamless text injection.
+- [x] Intelligent Notification Filtering mapped via Android 8.0 `default_filter_types`.
+
+### Phase 4: The Flutter UI & Pairing (Up Next / Handoff to Windows)
+- [ ] Initialize the Flutter Dashboard on the Windows Dev Machine.
+- [ ] Build the "Radar Map" UI to visualize connected devices.
+- [ ] Build the QR Code Pairing Flow (Scanning a QR code to exchange Public Keys into `trusted_roster.json`).
+- [ ] Bridge the Flutter UI to the Native Kotlin/Rust engines via `MethodChannels`/`ffi`.
+
+### Phase 5: The Global Mesh & Syncthing (Future)
+- [ ] Integrate the WireGuard `VpnService` into the Android app.
+- [ ] Connect the local daemons to the Rust VPS Relay when Wi-Fi is lost.
+- [ ] Bundle headless Syncthing and build the "Auto-Peering" API logic.
+
+### Phase 6: Advanced Apple Magic (Future)
+- [ ] "Universal Control": Route `libevdev` mouse coordinates over WebSockets for cross-device control.
+- [ ] "Asterisk Audio": Route live Android phone calls to the Linux desktop (Requires Root).
+
