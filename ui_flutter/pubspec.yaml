@@ -1,0 +1,24 @@
+name: openconnect_ui
+description: "The OpenConnect Control Dashboard"
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  qr_flutter: ^4.1.0 # For generating pairing QR codes
+  mobile_scanner: ^5.1.1 # For scanning QR codes (Android/iOS)
+  permission_handler: ^11.3.0 # For requesting camera permissions
+  http: ^1.2.0 # For the Local Control API (127.0.0.1:8766)
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
