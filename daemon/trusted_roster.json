@@ -1,0 +1,13 @@
+{
+  "ecosystem_id": "test-ecosystem-123",
+  "peers": {
+    "GxFtgg4UTw2KPESwEcDKN/+iXv94So5M3criJ1zOpgg=": {
+      "name": "Ezio_Kali_Laptop",
+      "role": "admin"
+    },
+    "ux+FYUt3EdEEENtjFsqVr5yTfkNNxrlgAf4sPVcfATg=": {
+      "name": "Redmi Note 4",
+      "role": "user"
+    }
+  }
+}
